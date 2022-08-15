@@ -3,6 +3,7 @@ const router = express.Router();
 const Movie = require("../models/Movie.model");
 const Celebrity = require("../models/Celebrity.model");
 const { populate } = require("../models/Celebrity.model");
+const { route } = require("./celebrities.routes");
 
 
 router.get('/create', (req, res) =>{
@@ -57,6 +58,36 @@ router.post("/:id/delete", (req, res) =>{
             res.redirect("../movies");
         })
         .catch(error =>{ console.log("this is the error: ", error)})
+})
+
+
+router.get("/:id/edit", (req, res)=>{
+    const {id} = req.params;
+    Movie.findById(id)
+        .then(response =>{
+            response.populate("cast")
+            .catch(error =>{ console.log("this is the error: ", error)})
+            .then(response =>{
+                res.render("movies/edit-movie", {response})
+            })
+            .catch(error =>{ console.log("this is the error: ", error)})
+
+        })
+
+router.post("/:id/edit", (req, res) =>{
+    const dataChanged = req.body;
+    const {id} = req.params;
+    console.log("this route is working")
+
+    Movie.findByIdAndUpdate(id, {title: dataChanged.title})
+        .then(response =>{
+              res.redirect("../movies");
+        })
+        .catch(error =>{ console.log("this is the error: ", error)})
+
+
+})
+       
 })
 
 module.exports = router;
