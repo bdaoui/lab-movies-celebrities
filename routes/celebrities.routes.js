@@ -12,10 +12,19 @@ router.post("/create", (req, res)=>{
     const actorData = req.body;
     Actor.create(actorData)
         .then(response => {
-            res.render("celebrities/celebrities");
+            res.redirect("/celebrities/celebrities");
         })
         .catch(error =>{ res.redirect("/create")});
 
+})
+
+
+router.get("/celebrities", (req, res)=>{
+    Actor.find()
+        .then(response =>{
+            res.render("celebrities/celebrities", {response});
+        })
+        .catch(error =>{ console.log("There is an error right here ", error)})
 })
 
 
